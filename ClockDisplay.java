@@ -14,10 +14,13 @@
  */
 public class ClockDisplay
 {
+    private final String AM = " AM";
+    private final String PM = " PM";
+    
     private NumberDisplay hours;
     private NumberDisplay minutes;
     private String displayString;    // simulates the actual display
-    private String suffix = " AM";   // 
+    private String suffix = AM;   // 
     
     /**
      * Constructor for ClockDisplay objects. This constructor 
@@ -27,6 +30,7 @@ public class ClockDisplay
     {
         hours = new NumberDisplay(12);
         minutes = new NumberDisplay(60);
+        suffix = AM;
         updateDisplay();
     }
 
@@ -37,9 +41,12 @@ public class ClockDisplay
      */
     public ClockDisplay(int hour, int minute, String initSuffix)
     {   
-        if (!((initSuffix == " AM") || (initSuffix == " PM"))) {
-            System.out.println("Invalid suffix for constructor, display not initialized.");
-            
+        // The constructor doesn't take exact intended values for input. This validates/fixes that.
+        if (!((initSuffix == "AM") || (initSuffix == "PM"))) {
+            System.out.println("Invalid suffix for constructor, set to default \" AM\".");
+            suffix = AM;
+        } else {
+            suffix = " " + initSuffix;
         }
         hours = new NumberDisplay(12);
         minutes = new NumberDisplay(60);
@@ -74,6 +81,15 @@ public class ClockDisplay
     {
         hours.setValue(hour);
         minutes.setValue(minute);
+        
+        // Same as the constructor.
+        if (!((newSuffix == " AM") || (newSuffix == " PM"))) {
+            System.out.println("Invalid suffix for constructor, set to default \" AM\".");
+            suffix = AM;
+        } else {
+            suffix = newSuffix;
+        }
+        
         updateDisplay();
     }
 
@@ -90,7 +106,7 @@ public class ClockDisplay
      */
     private void updateDisplay()
     {
-        displayString = hours.getDisplayValue() + ":" + 
-                        minutes.getDisplayValue();
+        displayString = ((hours.getValue() + 11) % 12 + 1) + ":" + 
+                        minutes.getDisplayValue() + suffix;
     }
 }
