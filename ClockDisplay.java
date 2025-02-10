@@ -17,6 +17,7 @@ public class ClockDisplay
     private NumberDisplay hours;
     private NumberDisplay minutes;
     private String displayString;    // simulates the actual display
+    private String suffix = " AM";   // 
     
     /**
      * Constructor for ClockDisplay objects. This constructor 
@@ -24,7 +25,7 @@ public class ClockDisplay
      */
     public ClockDisplay()
     {
-        hours = new NumberDisplay(24);
+        hours = new NumberDisplay(12);
         minutes = new NumberDisplay(60);
         updateDisplay();
     }
@@ -34,11 +35,15 @@ public class ClockDisplay
      * creates a new clock set at the time specified by the 
      * parameters.
      */
-    public ClockDisplay(int hour, int minute)
-    {
-        hours = new NumberDisplay(24);
+    public ClockDisplay(int hour, int minute, String initSuffix)
+    {   
+        if (!((initSuffix == " AM") || (initSuffix == " PM"))) {
+            System.out.println("Invalid suffix for constructor, display not initialized.");
+            
+        }
+        hours = new NumberDisplay(12);
         minutes = new NumberDisplay(60);
-        setTime(hour, minute);
+        setTime(hour, minute, suffix);
     }
 
     /**
@@ -48,8 +53,15 @@ public class ClockDisplay
     public void timeTick()
     {
         minutes.increment();
-        if(minutes.getValue() == 0) {  // it just rolled over!
+        if (minutes.getValue() == 0) {  // it just rolled over!
             hours.increment();
+        }
+        if (hours.getValue() == 0) {  // :confetti:
+            if (suffix == " AM") {
+                suffix = " PM";
+            } else {  //  Does not check explicitly for PM because in case of malfunction, it should be set to a default.
+                suffix = " AM";
+            }
         }
         updateDisplay();
     }
@@ -58,7 +70,7 @@ public class ClockDisplay
      * Set the time of the display to the specified hour and
      * minute.
      */
-    public void setTime(int hour, int minute)
+    public void setTime(int hour, int minute, String newSuffix)
     {
         hours.setValue(hour);
         minutes.setValue(minute);
