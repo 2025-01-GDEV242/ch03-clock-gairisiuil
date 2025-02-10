@@ -73,10 +73,15 @@ public class ClockDisplay
      */
     private void updateDisplay()
     {
-        // Sort of a hacky solution to this particular issue.
-        // I like it because it's smaller.
+        String suffix;
+        
+        if (hours.getValue() >= 12)
+            suffix = " PM";
+        else
+            suffix = " AM";
+        
         displayString = ((hours.getValue() + 11) % 12 + 1) + ":" + 
-                        minutes.getDisplayValue();
+                        minutes.getDisplayValue() + suffix;
         System.out.println(-1 % 12);
     }
 }
